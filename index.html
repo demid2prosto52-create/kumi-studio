@@ -1,1 +1,116 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KUMI STUDIO</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f3ef;color:#222;font-family:Arial,sans-serif}
+header{padding:22px;text-align:center;background:#fff}
+.logo{font-size:28px;letter-spacing:6px;font-weight:bold}
+header p{font-size:11px;letter-spacing:3px;color:#888}
+.hero{padding:55px 20px;text-align:center;background:#e8e5df}
+.hero h1{font-size:35px;letter-spacing:4px}
+.hero p{color:#666}
+button{border:0;padding:13px 20px;background:#222;color:white;border-radius:4px;cursor:pointer}
+.container{max-width:850px;margin:auto;padding:25px}
+.product{background:white;padding:20px;margin:15px 0;border-radius:12px}
+.product h3{margin-top:0}
+.price{font-size:22px;font-weight:bold}
+.cart{background:white;padding:20px;border-radius:12px;margin-top:25px}
+input,textarea{width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:5px}
+footer{text-align:center;padding:30px;color:#888}
+</style>
+</head>
+<body>
+
+<header>
+<div class="logo">KUMI STUDIO</div>
+<p>HANDMADE WITH CARE</p>
+</header>
+
+<section class="hero">
+<h1>ТВОЙ СТИЛЬ.<br>ТВОЙ ШНУР.</h1>
+<p>Ручное плетение. Каждое изделие создаётся с заботой.</p>
+<button onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">
+Смотреть каталог
+</button>
+</section>
+
+<div class="container">
+<h2 id="catalog">КАТАЛОГ</h2>
+
+<div class="product">
+<h3>Кумихимо — серый шнур</h3>
+<p>Ручное плетение, минималистичный дизайн.</p>
+<p>Цвет: серый</p>
+<p class="price">390 ₽</p>
+<button onclick="addToCart(false)">Добавить в корзину</button>
+</div>
+
+<div class="product">
+<h3>Кумихимо с карабином</h3>
+<p>Серый шнур с карабином для ключей.</p>
+<p class="price">440 ₽</p>
+<button onclick="addToCart(true)">Добавить в корзину</button>
+</div>
+
+<div class="cart">
+<h2>КОРЗИНА</h2>
+<div id="cartItems">Корзина пуста</div>
+<h3 id="total">Итого: 0 ₽</h3>
+<button onclick="checkout()">Оформить заказ</button>
+</div>
+
+<div class="container" id="checkoutForm" style="display:none">
+<h2>ОФОРМЛЕНИЕ</h2>
+<input id="name" placeholder="Имя">
+<input id="contact" placeholder="Контакт (телефон или email)">
+<textarea id="address" placeholder="Адрес и комментарий к заказу"></textarea>
+<button onclick="sendOrder()">Отправить заказ</button>
+</div>
+
+<footer>
+KUMI STUDIO · HANDMADE<br><br>
+Создано с заботой
+</footer>
+
+<script>
+let cart=[];
+function addToCart(clasp){
+cart.push({name:clasp?'Шнур с карабином':'Серый шнур',price:clasp?440:390});
+renderCart();
+}
+function renderCart(){
+let el=document.getElementById('cartItems');
+if(cart.length===0){el.innerText='Корзина пуста';}
+else{
+el.innerHTML=cart.map((x,i)=>
+`${x.name} — ${x.price} ₽ <button onclick="removeItem(${i})">Удалить</button>`
+).join('<br><br>');
+}
+document.getElementById('total').innerText=
+'Итого: '+cart.reduce((s,x)=>s+x.price,0)+' ₽';
+}
+function removeItem(i){cart.splice(i,1);renderCart();}
+function checkout(){
+if(!cart.length){alert('Сначала добавь товар в корзину');return;}
+document.getElementById('checkoutForm').style.display='block';
+document.getElementById('checkoutForm').scrollIntoView({behavior:'smooth'});
+}
+function sendOrder(){
+let name=document.getElementById('name').value.trim();
+let contact=document.getElementById('contact').value.trim();
+let address=document.getElementById('address').value.trim();
+if(!name||!contact||!address){
+alert('Заполни все поля');return;
+}
+let items=cart.map(x=>x.name+' — '+x.price+' ₽').join('\n');
+let total=cart.reduce((s,x)=>s+x.price,0);
+alert('Заказ сформирован!\n\n'+items+'\nИтого: '+total+' ₽\n\nЭто демонстрация. Заказ пока не отправлен продавцу.');
+}
+</script>
+</body>
+</html>
